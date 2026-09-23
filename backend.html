@@ -1,0 +1,169 @@
+const express = require('express');
+const cors = require('cors');
+
+const app = express();
+const PORT = process.env.PORT || 5000;
+
+app.use(cors());
+app.use(express.json());
+
+const complaints = [
+  {
+    id: 'CMP-1001',
+    name: 'Aarav Sharma',
+    email: 'aarav@example.com',
+    phone: '9876543210',
+    location: 'Sector 15, Noida',
+    title: 'Street light not working',
+    description: 'Street light near the main market is broken and causing darkness at night.',
+    category: 'Infrastructure',
+    department: 'Municipal Corporation',
+    priority: 'Medium',
+    status: 'Submitted',
+    createdAt: new Date().toISOString(),
+  },
+];
+
+const departmentRules = [
+  { department: 'Municipal Corporation', keywords: ['street light', 'garbage', 'drain', 'sewer', 'water logging', 'road', 'pothole', 'cleaning', 'waste', 'public hygiene'] },
+  { department: 'Electricity Department', keywords: ['electricity', 'power', 'transformer', 'light', 'streetlight', 'wire', 'breaker', 'power cut'] },
+  { department: 'Water Supply Department', keywords: ['water supply', 'tap', 'pipeline', 'leak', 'water', 'drainage', 'pipe'] },
+  { department: 'Traffic Police', keywords: ['traffic', 'signal', 'accident', 'parking', 'roadblock', 'junction', 'crossing'] },
+  { department: 'Health Department', keywords: ['hospital', 'clinic', 'medicine', 'sanitation', 'health', 'mosquito', 'medical'] },
+];
+
+function detectDepartment(title, description) {
+  const combinedText = `${title} ${description}`.toLowerCase();
+
+  for (const rule of departmentRules) {
+    const matched = rule.keywords.some((keyword) => combinedText.includes(keyword));
+    if (matched) {
+      return rule.department;
+    }
+  }
+
+  return 'Public Works Department';
+}
+
+function detectPriority(title, description) {
+  const combinedText = `${title} ${description}`.toLowerCase();
+
+  if (/(urgent|emergency|danger|flood|broken pipe|power cut|accident|medical)/i.test(combinedText)) {
+    return 'High';
+  }
+
+  if (/(not working|delay|issue|light|water|road|drain)/i.test(combinedText)) {
+    return 'Medium';
+  }
+
+  return 'Low';
+}
+
+function createComplaintId() {
+  const number = complaints.length + 1001;
+  return `CMP-${number}`;
+}
+
+app.get('/api/health', (req, res) => {
+  res.json({
+    status: 'ok',
+    message: 'SamadhanAI backend is running successfully.',
+    timestamp: new Date().toISOString(),
+  });
+});
+
+app.get('/api/complaints', (req, res) => {
+  res.json({
+    total: complaints.length,
+    complaints,
+  });
+});
+
+app.get('/api/complaints/:id', (req, res) => {
+  const complaint = complaints.find((item) => item.id === req.params.id);
+
+  if (!complaint) {
+    return res.status(404).json({ message: 'Complaint not found.' });
+  }
+
+  res.json({ complaint });
+});
+
+app.post('/api/complaints', (req, res) => {
+  const {
+    name,
+    email,
+    phone,
+    location,
+    title,
+    description,
+  } = req.body;
+
+  if (!name || !title || !description) {
+    return res.status(400).json({
+      message: 'Name, title, and description are required.',
+    });
+  }
+
+  const newComplaint = {
+    id: createComplaintId(),
+    name,
+    email: email || '',
+    phone: phone || '',
+    location: location || 'Not specified',
+    title,
+    description,
+    category: 'General Grievance',
+    department: detectDepartment(title, description),
+    priority: detectPriority(title, description),
+    status: 'Submitted',
+    createdAt: new Date().toISOString(),
+  };
+
+  complaints.unshift(newComplaint);
+
+  res.status(201).json({
+    message: 'Complaint submitted successfully.',
+    complaint: newComplaint,
+  });
+});
+
+app.put('/api/complaints/:id/status', (req, res) => {
+  const { status } = req.body;
+  const complaint = complaints.find((item) => item.id === req.params.id);
+
+  if (!complaint) {
+    return res.status(404).json({ message: 'Complaint not found.' });
+  }
+
+  if (!status) {
+    return res.status(400).json({ message: 'Status is required.' });
+  }
+
+  complaint.status = status;
+  complaint.updatedAt = new Date().toISOString();
+
+  res.json({
+    message: 'Complaint status updated successfully.',
+    complaint,
+  });
+});
+
+app.delete('/api/complaints/:id', (req, res) => {
+  const index = complaints.findIndex((item) => item.id === req.params.id);
+
+  if (index === -1) {
+    return res.status(404).json({ message: 'Complaint not found.' });
+  }
+
+  const [deletedComplaint] = complaints.splice(index, 1);
+
+  res.json({
+    message: 'Complaint deleted successfully.',
+    complaint: deletedComplaint,
+  });
+});
+
+app.listen(PORT, () => {
+  console.log(`SamadhanAI backend is running on http://localhost:${PORT}`);
+});

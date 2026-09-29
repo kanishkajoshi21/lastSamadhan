@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#0b5cff" />
+    <title data-i18n="authPageTitle">Sign in | SamadhanAI</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="login.css" />
+  </head>
+  <body>
+    <main class="auth-layout">
+      <section class="auth-aside">
+        <a class="auth-brand" href="/" aria-label="SamadhanAI home">
+          <span class="brand-mark">S</span>
+          <span>Samadhan<span class="brand-highlight">AI</span></span>
+        </a>
+        <p class="aside-kicker" data-i18n="portalAsideKicker">CIVIC SERVICES, CONNECTED</p>
+        <h1 data-i18n="portalAsideHeading">Every grievance deserves a clear path to resolution.</h1>
+        <p class="aside-copy" data-i18n="portalAsideDescription">A simple and transparent way for citizens and public departments to work together.</p>
+        <div class="trust-note"><span aria-hidden="true">✓</span> <span data-i18n="secureRoleAccess">Secure, role-based access</span></div>
+      </section>
+
+      <section class="auth-main" aria-labelledby="authTitle">
+        <div class="auth-topline">
+          <a href="/" class="back-link" data-i18n="backHome">Back to home</a>
+          <label class="language-control">
+            <span data-i18n="languageLabel">Language</span>
+            <select class="language-select" aria-label="Choose language" data-i18n-aria-label="languageLabel">
+              <option value="en" data-i18n="languageEnglish">English</option>
+              <option value="hi" data-i18n="languageHindi">Hindi</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="auth-card">
+          <span class="role-badge" id="roleBadge">Citizen portal</span>
+          <h2 id="authTitle">Citizen sign in</h2>
+          <p class="auth-intro" id="authIntro">Sign in to submit a complaint and follow its progress.</p>
+
+          <div class="auth-tabs" id="authTabs">
+            <button type="button" class="auth-tab active" id="loginTab" data-i18n="signIn">Sign in</button>
+            <button type="button" class="auth-tab" id="registerTab" data-i18n="createAccount">Create citizen account</button>
+          </div>
+
+          <form id="authForm" class="auth-form">
+            <label id="nameField" class="hidden">
+              <span data-i18n="fullName">Full name</span>
+              <input name="name" autocomplete="name" data-i18n-placeholder="fullName" />
+            </label>
+            <label>
+              <span data-i18n="email">Email address</span>
+              <input name="email" type="email" autocomplete="username" required data-i18n-placeholder="email" />
+            </label>
+            <label id="phoneField" class="hidden">
+              <span data-i18n="phone">Phone number (optional)</span>
+              <input name="phone" type="tel" autocomplete="tel" data-i18n-placeholder="phone" />
+            </label>
+            <label>
+              <span data-i18n="password">Password</span>
+              <input name="password" type="password" autocomplete="current-password" minlength="8" required data-i18n-placeholder="password" />
+            </label>
+            <small id="passwordHelp" class="field-help hidden" data-i18n="passwordHelp">Use at least 8 characters.</small>
+            <button type="submit" class="submit-btn" id="submitButton" data-i18n="loginButton">Sign in</button>
+            <p id="authMessage" class="auth-message" role="status" aria-live="polite"></p>
+            <button type="button" id="signOutOtherAccount" class="sign-out-other hidden" data-i18n="logout">Log out</button>
+          </form>
+
+          <p class="switch-copy" id="switchCopy">
+            <span data-i18n="noAccount">New to SamadhanAI?</span>
+            <button type="button" id="switchMode" data-i18n="createAccount">Create citizen account</button>
+          </p>
+          <p class="department-help hidden" id="departmentHelp" data-i18n="departmentAccessHelp">Department access is issued by your administrator. Use your official account credentials.</p>
+        </div>
+      </section>
+    </main>
+
+    <script src="i18n.js"></script>
+    <script src="login.js"></script>
+  </body>
+</html>

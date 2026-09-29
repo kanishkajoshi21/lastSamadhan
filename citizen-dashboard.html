@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#0b5cff" />
+    <title data-i18n="citizenDashboardTitle">Citizen Dashboard | SamadhanAI</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="citizen.css" />
+  </head>
+  <body class="citizen-body">
+    <div class="citizen-shell">
+      <header class="citizen-header">
+        <a href="/" class="citizen-brand">
+          <span class="brand-mark">S</span>
+          <span>Samadhan<span class="brand-highlight">AI</span></span>
+        </a>
+        <nav class="citizen-nav" aria-label="Citizen dashboard">
+          <a href="#dashboard" data-i18n="dashboard">Dashboard</a>
+          <a href="#complaints" data-i18n="myComplaints">My complaints</a>
+          <a href="#updates" data-i18n="notifications">Notifications & updates</a>
+          <a href="#profile" data-i18n="profile">Profile</a>
+        </nav>
+        <div class="citizen-actions">                               
+          <label class="language-control">
+            <span data-i18n="languageLabel">Language</span>
+            <select class="language-select" aria-label="Choose language" data-i18n-aria-label="languageLabel">
+              <option value="en" data-i18n="languageEnglish">English</option>
+              <option value="hi" data-i18n="languageHindi">Hindi</option>
+              
+            </select>
+          </label>
+          <button id="logoutButton" class="logout-button" type="button" data-i18n="logout">Log out</button>
+        </div>
+      </header>
+
+      <main id="dashboard">
+        <section class="welcome-panel">
+          <div>
+            <p class="eyebrow" data-i18n="citizenServices">CITIZEN SERVICES</p>
+            <h1><span data-i18n="dashboard">Dashboard</span>, <span id="citizenName">Citizen</span></h1>
+            <p data-i18n="dashboardWelcome">Track complaint status and see updates from your department.</p>
+          </div>
+          <a href="#new-complaint" class="new-complaint-link"><span aria-hidden="true">＋</span><span data-i18n="newComplaint">Submit a complaint</span></a>
+        </section>
+
+        <section class="citizen-stats" aria-label="Complaint overview">
+          <article><span data-i18n="myComplaints">My complaints</span><strong id="citizenTotal">0</strong></article>
+          <article><span data-i18n="pendingComplaints">Pending</span><strong id="citizenPending">0</strong></article>
+          <article><span data-i18n="inProgress">In progress</span><strong id="citizenInProgress">0</strong></article>
+          <article><span data-i18n="resolved">Resolved</span><strong id="citizenResolved">0</strong></article>
+        </section>
+
+        <section class="citizen-columns">
+          <div class="citizen-main-column">
+            <section class="citizen-panel" id="new-complaint">
+              <div class="panel-heading">
+                <div><p class="eyebrow" data-i18n="citizenServices">CITIZEN SERVICES</p><h2 data-i18n="newComplaint">Submit a complaint</h2></div>
+              </div>
+              <form id="complaintForm" class="citizen-complaint-form">
+                <input type="hidden" name="name" id="citizenFormName" />
+                <input type="hidden" name="email" id="citizenFormEmail" />
+                <input type="hidden" name="phone" id="citizenFormPhone" />
+                <label>
+                  <span data-i18n="complaintTitle">Complaint title</span>
+                  <input type="text" name="title" required maxlength="120" data-i18n-placeholder="complaintTitle" />
+                </label>
+                <label>
+                  <span data-i18n="location">Location</span>
+                  <input type="text" name="location" data-i18n-placeholder="location" />
+                </label>
+                <div class="voice-field">
+                  <label for="description" data-i18n="complaintDescription">Describe your complaint</label>
+                  <textarea id="description" name="description" rows="5" required maxlength="4000" data-i18n-placeholder="typeComplaint"></textarea>
+                  <button id="voiceComplaintBtn" type="button" class="voice-button" data-i18n="speakComplaint">🎤 Speak complaint</button>
+                </div>
+                <div class="upload-row">
+                  <label for="complaintPhoto" data-i18n="addPhoto">Add a photo (optional)</label>
+                  <label class="upload-box" for="complaintPhoto">
+                    <span data-i18n="choosePhoto">📷 Choose a photo</span>
+                    <input id="complaintPhoto" type="file" accept="image/jpeg,image/png,image/webp" />
+                  </label>
+                  <small data-i18n="photoHelp">JPG, PNG or WEBP up to 5 MB.</small>
+                  <img id="photoPreview" class="photo-preview hidden" alt="Selected complaint photo preview" data-i18n-alt="photoPreviewAlt" />
+                </div>
+                <button type="submit" class="submit-button" data-i18n="submitComplaint">Submit complaint</button>
+                <p id="formMessage" class="form-message" role="status" aria-live="polite"></p>
+              </form>
+            </section>
+
+            <section class="citizen-panel" id="complaints">
+              <div class="panel-heading">
+                <div><p class="eyebrow" data-i18n="trackComplaints">Track complaint status</p><h2 data-i18n="myGrievances">Your grievances</h2></div>
+              </div>
+              <div id="complaintList" class="my-complaint-list" aria-live="polite"></div>
+            </section>
+          </div>
+
+          <aside class="citizen-side-column">
+            <section class="citizen-panel" id="updates">
+              <div class="panel-heading"><div><p class="eyebrow" data-i18n="notifications">Notifications & updates</p><h2 data-i18n="notifications">Notifications & updates</h2></div></div>
+              <div id="notificationList" class="notification-list"></div>
+            </section>
+            <section class="citizen-panel profile-panel" id="profile">
+              <div class="panel-heading"><div><p class="eyebrow" data-i18n="profile">Profile</p><h2 data-i18n="profile">Profile</h2></div></div>
+              <dl>
+                <div><dt data-i18n="fullName">Full name</dt><dd id="profileName">—</dd></div>
+                <div><dt data-i18n="email">Email address</dt><dd id="profileEmail">—</dd></div>
+                <div><dt data-i18n="phone">Phone number (optional)</dt><dd id="profilePhone">—</dd></div>
+              </dl>
+            </section>
+          </aside>
+        </section>
+      </main>
+      <footer class="citizen-footer">SamadhanAI · <span data-i18n="transparentUpdates">Transparent civic services</span></footer>
+    </div>
+    <script src="i18n.js"></script>
+    <script src="script.js"></script>
+    <script src="citizen-dashboard.js"></script>
+  </body>
+</html>

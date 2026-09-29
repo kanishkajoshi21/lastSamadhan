@@ -17,34 +17,165 @@ document.querySelectorAll("#navMenu a").forEach(function(link) {
    FORM & API HANDLERS
 ========================= */
 
+const pageHost = String(window.location.hostname || '').trim();
+const API_BASE_URL = window.location.port === '5000'
+    ? ''
+    : (!pageHost || ['localhost', '127.0.0.1', '[::1]'].includes(pageHost) ? 'http://localhost:5000' : '');
+
+function escapeHtml(value) {
+    return String(value ?? "").replace(/[&<>"']/g, function(character) {
+        const entities = {
+            "&": "&amp;",
+            "<": "&lt;",
+            ">": "&gt;",
+            '"': "&quot;",
+            "'": "&#039;",
+        };
+        return entities[character];
+    });
+}
+
+function readFormValue(form, fieldName) {
+    const field = form.elements.namedItem(fieldName);
+    return field && "value" in field ? field.value : "";
+}
+
 async function loadComplaintList() {
     const list = document.getElementById("complaintList");
     if (!list) return;
 
     try {
-        const response = await fetch("http://localhost:5000/api/complaints");
+        const response = await fetch(`${API_BASE_URL}/api/complaints`, { credentials: 'include' });
+        if (response.status === 401) {
+            list.innerHTML = `<p class='empty-state'>${window.SamadhanI18n.translate("authRequired")}</p>`;
+            return;
+        }
+        if (!response.ok) {
+            throw new Error(window.SamadhanI18n.translate("serverUnavailable"));
+        }
         const data = await response.json();
 
         const complaints = data.complaints || [];
 
         if (!complaints.length) {
-            list.innerHTML = "<p class='empty-state'>No complaint submitted yet.</p>";
+            list.innerHTML = `<p class='empty-state'>${window.SamadhanI18n.translate("noComplaints")}</p>`;
             return;
         }
 
         list.innerHTML = complaints.slice(0, 5).map(item => `
             <div class="complaint-item">
                 <div class="complaint-top">
-                    <strong>${item.title}</strong>
-                    <span class="${item.priority.toLowerCase()}">${item.priority}</span>
+                    <strong>${escapeHtml(item.title)}</strong>
+                    <span class="${escapeHtml(String(item.priority || "").toLowerCase())}">${escapeHtml(window.SamadhanI18n.translatePriority(item.priority))}</span>
                 </div>
-                <p>${item.description}</p>
-                <small>${item.department} • ${item.status}</small>
+                <p>${escapeHtml(item.description)}</p>
+                ${item.photo ? `<img src="${escapeHtml(item.photo)}" alt="${escapeHtml(item.title)}" class="complaint-photo" />` : ""}
+                <small>${escapeHtml(window.SamadhanI18n.translateDepartment(item.department))} · ${escapeHtml(window.SamadhanI18n.translateStatus(item.status))}</small>
             </div>
         `).join("");
     } catch (error) {
-        list.innerHTML = "<p class='empty-state'>Server is not responding yet.</p>";
+        list.innerHTML = `<p class='empty-state'>${window.SamadhanI18n.translate("serverUnavailable")}</p>`;
     }
+}
+
+function bindVoiceInput() {
+    const voiceButton = document.getElementById("voiceComplaintBtn");
+    const descriptionField = document.getElementById("description");
+    const message = document.getElementById("formMessage");
+
+    if (!voiceButton || !descriptionField) return;
+
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+
+    if (!SpeechRecognition) {
+        voiceButton.disabled = true;
+        voiceButton.title = window.SamadhanI18n.translate("voiceFailure");
+        return;
+    }
+
+    const recognition = new SpeechRecognition();
+    recognition.lang = ({
+        en: "en-IN",
+        hi: "hi-IN",
+        pa: "pa-IN",
+    })[window.SamadhanI18n.getLanguage()] || "en-IN";
+    recognition.interimResults = false;
+
+    let isListening = false;
+
+    voiceButton.addEventListener("click", function() {
+        if (isListening) return;
+
+        recognition.start();
+        isListening = true;
+        voiceButton.disabled = true;
+        voiceButton.textContent = window.SamadhanI18n.translate("voiceListening");
+        if (message) {
+            message.textContent = window.SamadhanI18n.translate("voiceListeningMessage");
+            message.className = "form-message";
+        }
+    });
+
+    recognition.addEventListener("result", function(event) {
+        const transcript = event.results[0][0].transcript;
+        const currentText = descriptionField.value.trim();
+        descriptionField.value = currentText ? `${currentText} ${transcript}` : transcript;
+    });
+
+    recognition.addEventListener("end", function() {
+        isListening = false;
+        voiceButton.disabled = false;
+        voiceButton.textContent = window.SamadhanI18n.translate("speakComplaint");
+    });
+
+    recognition.addEventListener("error", function() {
+        isListening = false;
+        if (message) {
+            message.textContent = window.SamadhanI18n.translate("voiceFailure");
+            message.className = "form-message error";
+        }
+        voiceButton.disabled = false;
+        voiceButton.textContent = window.SamadhanI18n.translate("speakComplaint");
+    });
+}
+
+function bindPhotoUpload() {
+    const photoInput = document.getElementById("complaintPhoto");
+    const photoPreview = document.getElementById("photoPreview");
+    const message = document.getElementById("formMessage");
+
+    if (!photoInput || !photoPreview) return;
+
+    photoInput.addEventListener("change", function() {
+        const file = this.files && this.files[0];
+
+        if (!file) {
+            photoPreview.classList.add("hidden");
+            photoPreview.src = "";
+            this.dataset.preview = "";
+            return;
+        }
+
+        if (file.size > 5 * 1024 * 1024) {
+            if (message) {
+                message.textContent = window.SamadhanI18n.translate("photoTooLarge");
+                message.className = "form-message error";
+            }
+            this.value = "";
+            photoPreview.classList.add("hidden");
+            photoPreview.src = "";
+            this.dataset.preview = "";
+            return;
+        }
+
+        const reader = new FileReader();
+        reader.onload = function(event) {
+            photoPreview.src = event.target.result;
+            photoPreview.classList.remove("hidden");
+            photoInput.dataset.preview = event.target.result;
+        };
+        reader.readAsDataURL(file);
+    });
 }
 
 async function submitComplaint(event) {
@@ -53,23 +184,27 @@ async function submitComplaint(event) {
     const form = event.target;
     const message = document.getElementById("formMessage");
     const submitButton = form.querySelector("button[type='submit']");
+    const photoInput = document.getElementById("complaintPhoto");
+    const photoPreview = document.getElementById("photoPreview");
 
     const payload = {
-        name: form.name.value,
-        email: form.email.value,
-        phone: form.phone.value,
-        location: form.location.value,
-        title: form.title.value,
-        description: form.description.value,
+        name: readFormValue(form, "name"),
+        email: readFormValue(form, "email"),
+        phone: readFormValue(form, "phone"),
+        location: readFormValue(form, "location"),
+        title: readFormValue(form, "title"),
+        description: readFormValue(form, "description"),
+        photo: photoInput && photoInput.dataset.preview ? photoInput.dataset.preview : "",
     };
 
     submitButton.disabled = true;
-    submitButton.textContent = "Submitting...";
+    submitButton.textContent = window.SamadhanI18n.translate("submitting");
     message.textContent = "";
 
     try {
-        const response = await fetch("http://localhost:5000/api/complaints", {
+        const response = await fetch(`${API_BASE_URL}/api/complaints`, {
             method: "POST",
+            credentials: "include",
             headers: {
                 "Content-Type": "application/json"
             },
@@ -79,27 +214,55 @@ async function submitComplaint(event) {
         const result = await response.json();
 
         if (!response.ok) {
+            if (response.status === 401) {
+                window.location.assign(`${API_BASE_URL}/login.html?role=citizen`);
+                return;
+            }
             throw new Error(result.message || "Submission failed.");
         }
 
-        message.textContent = "Complaint submitted successfully!";
+        message.textContent = window.SamadhanI18n.translate("complaintSubmitted");
         message.className = "form-message success";
         form.reset();
-        loadComplaintList();
+
+        if (photoInput) {
+            photoInput.dataset.preview = "";
+            photoInput.value = "";
+        }
+
+        if (photoPreview) {
+            photoPreview.src = "";
+            photoPreview.classList.add("hidden");
+        }
+
+        if (document.getElementById("citizenName")) {
+            document.dispatchEvent(new CustomEvent("samadhan:complaints-updated"));
+        } else {
+            loadComplaintList();
+        }
     } catch (error) {
-        message.textContent = error.message;
+        message.textContent = error.message || window.SamadhanI18n.translate("serverUnavailable");
         message.className = "form-message error";
     } finally {
         submitButton.disabled = false;
-        submitButton.textContent = "Submit Complaint";
+        submitButton.textContent = window.SamadhanI18n.translate("submitComplaint");
     }
 }
 
 function showMessage() {
-    const formSection = document.getElementById("complaint-form");
-    if (formSection) {
-        formSection.scrollIntoView({ behavior: "smooth", block: "start" });
+    showPortalChooser();
+}
+
+function showPortalChooser() {
+    const dialog = document.getElementById("portalDialog");
+    if (dialog && typeof dialog.showModal === "function") {
+        dialog.showModal();
     }
+}
+
+function closePortalChooser() {
+    const dialog = document.getElementById("portalDialog");
+    if (dialog) dialog.close();
 }
 
 document.addEventListener("DOMContentLoaded", function() {
@@ -108,5 +271,9 @@ document.addEventListener("DOMContentLoaded", function() {
         complaintForm.addEventListener("submit", submitComplaint);
     }
 
-    loadComplaintList();
+    bindVoiceInput();
+    bindPhotoUpload();
+    if (!document.getElementById("citizenName")) {
+        loadComplaintList();
+    }
 });

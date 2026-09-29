@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title data-i18n="departmentDashboardTitle">SamadhanAI | Department Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="dashboard.css" />
+  </head>
+  <body class="dash-body">
+    <div class="dash-shell">
+      <header class="dash-header">
+        <div class="brand-block">
+          <div class="brand-mark">S</div>
+          <div>
+            <p class="eyebrow">SamadhanAI</p>
+            <h1 data-i18n="adminDashboard">Department Dashboard</h1>
+          </div>
+        </div>
+
+        <div class="header-actions">
+          <label class="language-control">
+            <span data-i18n="languageLabel">Language</span>
+            <select class="language-select" aria-label="Choose language" data-i18n-aria-label="languageLabel">
+              <option value="en" data-i18n="languageEnglish">English</option>
+              <option value="hi" data-i18n="languageHindi">Hindi</option>
+             
+            </select>
+          </label>
+          <a href="/" class="ghost-btn" data-i18n="publicWebsite">Public website</a>
+          <div class="admin-pill" id="departmentProfile">Department officer</div>
+          <button type="button" id="logoutButton" class="ghost-btn" data-i18n="logout">Log out</button>
+        </div>
+      </header>
+
+      <main>
+        <section class="stats-grid">
+          <article class="stat-card">
+            <p data-i18n="assignedComplaints">Assigned complaints</p>
+            <strong id="totalComplaints">0</strong>
+          </article>
+          <article class="stat-card warning">
+            <p data-i18n="pendingComplaints">Pending</p>
+            <strong id="pendingCount">0</strong>
+          </article>
+          <article class="stat-card info">
+            <p data-i18n="highPriority">High priority</p>
+            <strong id="highPriorityCount">0</strong>
+          </article>
+          <article class="stat-card info">
+            <p data-i18n="inProgress">In progress</p>
+            <strong id="inProgressCount">0</strong>
+          </article>
+          <article class="stat-card success">
+            <p data-i18n="resolved">Resolved</p>
+            <strong id="resolvedCount">0</strong>
+          </article>
+        </section>
+
+        <section class="panel">
+          <div class="panel-header">
+            <div>
+              <p class="eyebrow" data-i18n="departmentOperations">Department operations</p>
+              <h2 data-i18n="assignedComplaints">Assigned complaints</h2>
+            </div>
+            <button id="refreshBtn" class="refresh-btn" data-i18n="refresh">Refresh</button>
+          </div>
+
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th data-i18n="category">Category</th>
+                  <th data-i18n="citizenComplaint">Citizen complaint</th>
+                  <th data-i18n="assignedDepartment">Department</th>
+                  <th data-i18n="priority">Priority</th>
+                  <th data-i18n="status">Status</th>
+                  <th data-i18n="dateTime">Date/time</th>
+                  <th data-i18n="updateStatus">Update status</th>
+                  <th data-i18n="viewDetails">Details</th>
+                </tr>
+              </thead>
+              <tbody id="complaintTableBody"></tbody>
+            </table>
+          </div>
+        </section>
+        <section class="panel notification-panel">
+          <div class="panel-header">
+            <div>
+              <p class="eyebrow" data-i18n="notifications">Notifications & updates</p>
+              <h2 data-i18n="notifications">Notifications & updates</h2>
+            </div>
+          </div>
+          <div id="departmentNotifications" class="notification-feed" aria-live="polite"></div>
+        </section>
+      </main>
+    </div>
+
+    <dialog id="complaintDialog" class="complaint-dialog" aria-labelledby="detailTitle">
+      <form method="dialog"><button class="dialog-close" aria-label="Close">×</button></form>
+      <p class="eyebrow" data-i18n="complaintDetails">Complaint details</p>
+      <h2 id="detailTitle">Complaint</h2>
+      <dl class="detail-grid">
+        <div><dt data-i18n="citizenName">Citizen</dt><dd id="detailCitizen">—</dd></div>
+        <div><dt data-i18n="location">Location</dt><dd id="detailLocation">—</dd></div>
+        <div><dt data-i18n="priority">Priority</dt><dd id="detailPriority">—</dd></div>
+        <div><dt data-i18n="status">Status</dt><dd id="detailStatus">—</dd></div>
+      </dl>
+      <p id="detailDescription" class="detail-description"></p>
+      <img id="detailPhoto" class="detail-photo hidden" alt="" />
+      <div class="detail-actions">
+        <label><span data-i18n="updateStatus">Update status</span>
+          <select id="detailStatusSelect" class="status-select">
+            <option value="Submitted" data-i18n="submittedStatus">Submitted</option>
+            <option value="Pending" data-i18n="pendingStatus">Pending</option>
+            <option value="In Progress" data-i18n="inProgressStatus">In Progress</option>
+            <option value="Resolved" data-i18n="resolvedStatus">Resolved</option>
+          </select>
+        </label>
+        <label><span data-i18n="forwardComplaint">Forward complaint</span>
+          <select id="detailDepartmentSelect" class="status-select">
+            <option value="Municipal Corporation" data-i18n="municipalDept">Municipal Corporation</option>
+            <option value="Electricity Department" data-i18n="electricityDept">Electricity Department</option>
+            <option value="Water Supply Department" data-i18n="waterSupplyDept">Water Supply Department</option>
+            <option value="Traffic Police" data-i18n="trafficPolice">Traffic Police</option>
+            <option value="Health Department" data-i18n="healthDept">Health Department</option>
+            <option value="Public Works Department" data-i18n="publicWorks">Public Works Department</option>
+          </select>
+        </label>
+      </div>
+      <button id="saveComplaintButton" type="button" class="refresh-btn" data-i18n="saveChanges">Save changes</button>
+      <p id="detailMessage" class="detail-message" role="status" aria-live="polite"></p>
+    </dialog>
+
+    <script src="i18n.js"></script>
+    <script src="dashboard.js"></script>
+  </body>
+</html>

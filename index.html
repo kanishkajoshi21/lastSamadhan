@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -11,9 +11,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
     <!-- CSS File -->
     <link rel="stylesheet" href="style.css">
@@ -32,7 +30,7 @@
 
             <div>
                 <h2>Samadhan<span>AI</span></h2>
-                <p>Smart Civic Grievance Platform</p>
+                <p data-i18n="platformTagline">Smart Civic Grievance Platform</p>
             </div>
 
         </div>
@@ -40,25 +38,56 @@
 
         <nav id="navMenu">
 
-            <a href="#home">Home</a>
-            <a href="#about">About</a>
-            <a href="#solution">Solution</a>
-            <a href="#features">Features</a>
+            <a href="#home" data-i18n="navHome">Home</a>
+            <a href="#about" data-i18n="navAbout">About</a>
+            <a href="#solution" data-i18n="navSolution">Solution</a>
+            <a href="#features" data-i18n="navFeatures">Features</a>
+            <a href="#home" onclick="showPortalChooser()" data-i18n="navDashboard">My dashboard</a>
 
         </nav>
 
+        <label class="language-control">
+            <span data-i18n="languageLabel">Language</span>
+            <select class="language-select" aria-label="Choose language" data-i18n-aria-label="languageLabel">
+                <option value="en" data-i18n="languageEnglish">English</option>
+                <option value="hi" data-i18n="languageHindi">Hindi</option>
+            </select>
+        </label>
 
-        <button class="nav-btn" onclick="showMessage()">
-            Get Started
+        <button class="nav-btn" onclick="showPortalChooser()" data-i18n="getStarted">
+            Get started
         </button>
 
 
-        <div class="menu" onclick="toggleMenu()">
+        <button class="menu" type="button" aria-label="Open navigation menu" data-i18n-aria-label="openMenu"
+            onclick="toggleMenu()">
             ☰
-        </div>
+        </button>
 
     </header>
 
+    <dialog class="portal-dialog" id="portalDialog" aria-labelledby="portalTitle">
+        <button class="dialog-close" type="button" aria-label="Close" data-i18n-aria-label="closeDialog"
+            onclick="closePortalChooser()">×</button>
+        <span class="section-label">SAMADHANAI</span>
+        <h2 id="portalTitle" data-i18n="howContinue">How would you like to continue?</h2>
+        <p data-i18n="chooseRoleHelp">Choose the service that matches your needs.</p>
+        <div class="portal-options">
+            <a class="portal-option citizen-option" href="/login.html?role=citizen">
+                <span class="portal-icon" aria-hidden="true">♙</span>
+                <strong data-i18n="citizen">Citizen</strong>
+                <small data-i18n="citizenDescription">Submit complaints, track your grievances and view updates.</small>
+                <span class="portal-link" data-i18n="continueCitizen">Continue as citizen</span>
+            </a>
+            <a class="portal-option department-option" href="/login.html?role=department">
+                <span class="portal-icon" aria-hidden="true">▦</span>
+                <strong data-i18n="department">Department</strong>
+                <small data-i18n="departmentDescription">Manage assigned complaints, update status and handle grievance
+                    resolution.</small>
+                <span class="portal-link" data-i18n="continueDepartment">Continue as department</span>
+            </a>
+        </div>
+    </dialog>
 
 
     <!-- ================= HERO / FRONT PAGE ================= -->
@@ -71,21 +100,15 @@
 
             <div class="hero-content">
 
-                <div class="badge">
-                    SMART INDIA HACKATHON 2026
-                </div>
+                <!-- <div class="badge" data-i18n="heroBadge">
+Sistec innovation 
+                </div> -->
 
 
-                <h1>
-
-                    Aapki shikayat,
-
-                    <span>seedha sahi vibhag tak.</span>
-
-                </h1>
+                <h1 data-i18n="heroTitle">Your grievance, routed to the right department.</h1>
 
 
-                <p class="hero-text">
+                <p class="hero-text" data-i18n="heroText">
 
                     SamadhanAI is an AI-powered civic grievance
                     management platform that understands citizen
@@ -96,16 +119,14 @@
 
                 <div class="buttons">
 
-                    <button class="primary-btn"
-                            onclick="showMessage()">
+                    <button class="primary-btn" onclick="showPortalChooser()" data-i18n="fileComplaint">
 
                         File a Complaint →
 
                     </button>
 
 
-                    <a href="#solution"
-                       class="secondary-btn">
+                    <a href="#solution" class="secondary-btn" data-i18n="exploreSolution">
 
                         Explore Solution
 
@@ -120,17 +141,17 @@
 
                     <div>
                         <strong>AI</strong>
-                        <small>Smart Routing</small>
+                        <small data-i18n="smartRouting">Smart Routing</small>
                     </div>
 
                     <div>
                         <strong>24×7</strong>
-                        <small>Digital Access</small>
+                        <small data-i18n="digitalAccess">Digital Access</small>
                     </div>
 
                     <div>
                         <strong>Live</strong>
-                        <small>Status Tracking</small>
+                        <small data-i18n="statusTracking">Status Tracking</small>
                     </div>
 
                 </div>
@@ -148,16 +169,15 @@
 
                 <div class="image-card">
 
-                    <img
-                        src="https://images.pexels.com/photos/13465093/pexels-photo-13465093.jpeg?auto=compress&dpr=1&h=750&w=1260"
-                        alt="Citizen using smartphone in city">
+                    <img src="https://images.pexels.com/photos/13465093/pexels-photo-13465093.jpeg?auto=compress&dpr=1&h=750&w=1260"
+                        alt="Citizen using smartphone in city" data-i18n-alt="citizenUsingPhone">
 
                     <div class="image-overlay">
 
-                        <span>CONNECTED CITY</span>
+                        <span data-i18n="connectedCity">CONNECTED CITY</span>
 
                         <strong>
-                            Citizen → Technology → Department
+                            <span data-i18n="citizenTechnologyDepartment">Citizen → Technology → Department</span>
                         </strong>
 
                     </div>
@@ -178,9 +198,9 @@
 
                         <div>
 
-                            <small>AI ANALYSIS</small>
+                            <small data-i18n="aiAnalysis">AI ANALYSIS</small>
 
-                            <strong>Complaint detected</strong>
+                            <strong data-i18n="complaintDetected">Complaint detected</strong>
 
                         </div>
 
@@ -189,10 +209,9 @@
                     </div>
 
 
-                    <div class="complaint">
+                    <div class="complaint" data-i18n="demoComplaint">
 
-                        "Street light has been
-                        broken for 3 days."
+                        "Street light has been broken for 3 days."
 
                     </div>
 
@@ -200,23 +219,23 @@
                     <div class="analysis-grid">
 
                         <div>
-                            <small>Category</small>
-                            <strong>Street Light</strong>
+                            <small data-i18n="category">Category</small>
+                            <strong data-i18n="streetLight">Street Light</strong>
                         </div>
 
                         <div>
-                            <small>Priority</small>
-                            <strong class="medium">Medium</strong>
+                            <small data-i18n="priority">Priority</small>
+                            <strong class="medium" data-i18n="mediumPriority">Medium</strong>
                         </div>
 
                         <div>
-                            <small>Department</small>
-                            <strong>Municipal</strong>
+                            <small data-i18n="assignedDepartment">Department</small>
+                            <strong data-i18n="municipalCorporation">Municipal</strong>
                         </div>
 
                         <div>
-                            <small>Status</small>
-                            <strong class="submitted">Submitted</strong>
+                            <small data-i18n="status">Status</small>
+                            <strong class="submitted" data-i18n="submittedStatus">Submitted</strong>
                         </div>
 
                     </div>
@@ -229,8 +248,7 @@
                 <div class="smart-tag">
 
                     <span>✓</span>
-
-                    Smart Routing
+                    <span data-i18n="smartRouting">Smart Routing</span>
 
                 </div>
 
@@ -244,16 +262,13 @@
 
         <section class="about" id="about">
 
-            <div class="section-label">
+            <div class="section-label" data-i18n="whySamadhan">
                 WHY SAMADHANAI?
             </div>
 
-            <h2>
-                From complaint to
-                <span>resolution.</span>
-            </h2>
+            <h2 data-i18n="flowTitle">From complaint to resolution.</h2>
 
-            <p>
+            <p data-i18n="flowDescription">
                 A simple digital bridge between citizens
                 and the departments responsible for action.
             </p>
@@ -263,32 +278,32 @@
 
                 <div>
                     <b>01</b>
-                    <strong>Complaint</strong>
-                    <small>Citizen submits issue</small>
+                    <strong data-i18n="plainInputTitle">Complaint</strong>
+                    <small data-i18n="citizenSubmits">Citizen submits issue</small>
                 </div>
 
                 <i>→</i>
 
                 <div>
                     <b>02</b>
-                    <strong>AI Analysis</strong>
-                    <small>Category & priority</small>
+                    <strong data-i18n="aiAnalysis">AI Analysis</strong>
+                    <small data-i18n="categoryPriority">Category & priority</small>
                 </div>
 
                 <i>→</i>
 
                 <div>
                     <b>03</b>
-                    <strong>Department</strong>
-                    <small>Smart routing</small>
+                    <strong data-i18n="department">Department</strong>
+                    <small data-i18n="smartRoutingStep">Smart routing</small>
                 </div>
 
                 <i>→</i>
 
                 <div>
                     <b>04</b>
-                    <strong>Tracking</strong>
-                    <small>Follow progress</small>
+                    <strong data-i18n="trackComplaints">Tracking</strong>
+                    <small data-i18n="followProgress">Follow progress</small>
                 </div>
 
             </div>
@@ -303,14 +318,11 @@
 
             <div>
 
-                <div class="section-label">
+                <div class="section-label" data-i18n="solutionEyebrow">
                     OUR SOLUTION
                 </div>
 
-                <h2>
-                    Simple for citizens.
-                    <span>Smart behind the scenes.</span>
-                </h2>
+                <h2 data-i18n="solutionTitle">Simple for citizens. Smart behind the scenes.</h2>
 
             </div>
 
@@ -321,9 +333,9 @@
 
                     <span>✎</span>
 
-                    <h3>Plain Language</h3>
+                    <h3 data-i18n="plainLanguageFeature">Plain Language</h3>
 
-                    <p>
+                    <p data-i18n="plainLanguageFeatureDescription">
                         Citizens can describe their issue
                         naturally.
                     </p>
@@ -335,9 +347,9 @@
 
                     <span>✦</span>
 
-                    <h3>AI Classification</h3>
+                    <h3 data-i18n="aiClassificationFeature">AI Classification</h3>
 
-                    <p>
+                    <p data-i18n="aiClassificationFeatureDescription">
                         AI identifies category, priority
                         and department.
                     </p>
@@ -349,9 +361,9 @@
 
                     <span>✓</span>
 
-                    <h3>Live Tracking</h3>
+                    <h3 data-i18n="liveTrackingFeature">Live Tracking</h3>
 
-                    <p>
+                    <p data-i18n="liveTrackingFeatureDescription">
                         Citizens can track the complaint
                         until resolution.
                     </p>
@@ -368,29 +380,26 @@
 
         <section class="features" id="features">
 
-            <div class="section-label">
+            <div class="section-label" data-i18n="featuresEyebrow">
                 KEY FEATURES
             </div>
 
-            <h2>
-                Everything in one
-                <span>grievance journey.</span>
-            </h2>
+            <h2 data-i18n="featuresTitle">Everything in one grievance journey.</h2>
 
 
             <div class="feature-grid">
 
-                <div>AI Categorization</div>
+                <div data-i18n="aiCategorization">AI Categorization</div>
 
-                <div>Priority Detection</div>
+                <div data-i18n="priorityDetection">Priority Detection</div>
 
-                <div>Smart Routing</div>
+                <div data-i18n="smartRouting">Smart Routing</div>
 
-                <div>Department Dashboard</div>
+                <div data-i18n="departmentDashboardFeature">Department Dashboard</div>
 
-                <div>Live Tracking</div>
+                <div data-i18n="liveTrackingFeature">Live Tracking</div>
 
-                <div>Transparent Updates</div>
+                <div data-i18n="transparentUpdates">Transparent Updates</div>
 
             </div>
 
@@ -406,17 +415,14 @@
 
                 <span>SAMADHANAI</span>
 
-                <h2>
-                    Better complaints.
-                    Better response.
-                </h2>
+                <h2 data-i18n="ctaTitle">Better complaints. Better response.</h2>
 
-                <p>
+                <p data-i18n="ctaDescription">
                     Building a smarter connection between
                     citizens and civic departments.
                 </p>
 
-                <button onclick="showMessage()">
+                <button onclick="showPortalChooser()" data-i18n="startSamadhan">
                     Start with SamadhanAI →
                 </button>
 
@@ -425,29 +431,48 @@
         </section>
 
         <section class="complaint-panel" id="complaint-form">
-            <div class="section-label">FILE A COMPLAINT</div>
-            <h2>Tell us what’s happening in your area</h2>
+            <div class="section-label" data-i18n="fileComplaintLabel">FILE A COMPLAINT</div>
+            <h2 data-i18n="complaintFormTitle">Tell us what’s happening in your area</h2>
 
             <form id="complaintForm" class="complaint-form">
                 <div class="field-row">
-                    <input type="text" name="name" placeholder="Full Name" required>
-                    <input type="email" name="email" placeholder="Email Address">
+                    <input type="text" name="name" placeholder="Full Name" data-i18n-placeholder="fullName" required>
+                    <input type="email" name="email" placeholder="Email Address" data-i18n-placeholder="emailAddress">
                 </div>
 
                 <div class="field-row">
-                    <input type="tel" name="phone" placeholder="Phone Number">
-                    <input type="text" name="location" placeholder="Location">
+                    <input type="tel" name="phone" placeholder="Phone Number" data-i18n-placeholder="phoneNumber">
+                    <input type="text" name="location" placeholder="Location" data-i18n-placeholder="location">
+                </div>
+                
+
+                <div class="voice-field">
+                    <label for="description" data-i18n="describeIssue">Describe the issue</label>
+                    <textarea id="description" name="description" rows="5"
+                        placeholder="Type your complaint or use the voice button below"
+                        data-i18n-placeholder="typeComplaint" required></textarea>
+                    <button id="voiceComplaintBtn" type="button" class="secondary-btn">
+                        <span data-i18n="speakComplaint">🎤 Speak complaint</span>
+                    </button>
+                    <small class="field-help" data-i18n="languageVoiceHelp">You can speak in Hindi or English.</small>
                 </div>
 
-                <input type="text" name="title" placeholder="Complaint Title" required>
-                <textarea name="description" rows="5" placeholder="Describe the issue" required></textarea>
+                <div class="upload-row">
+                    <label for="complaintPhoto" data-i18n="addPhoto">Add a photo (optional)</label>
+                    <label class="upload-box" for="complaintPhoto">
+                        <span data-i18n="choosePhoto">📷 Choose a photo</span>
+                        <input id="complaintPhoto" type="file" accept="image/*">
+                    </label>
+                    <small class="field-help" data-i18n="photoHelp">JPG, PNG or WEBP up to 5 MB.</small>
+                    <img id="photoPreview" class="photo-preview hidden" alt="Selected complaint photo preview">
+                </div>
 
-                <button type="submit" class="primary-btn">Submit Complaint</button>
+                <button type="submit" class="primary-btn" data-i18n="submitComplaint">Submit Complaint</button>
                 <p id="formMessage" class="form-message"></p>
             </form>
 
             <div class="recent-complaints">
-                <h3>Recent complaint feed</h3>
+                <h3 data-i18n="recentComplaints">Recent complaint feed</h3>
                 <div id="complaintList" class="complaint-list"></div>
             </div>
         </section>
@@ -464,18 +489,19 @@
             Samadhan<span>AI</span>
         </strong>
 
-        <p>
+        <p data-i18n="aiPoweredGrievance">
             AI-Powered Civic Grievance Management
         </p>
 
-        <small>
-            Smart India Hackathon 2026
+        <small data-i18n="hackathonFooter">
+            Sistec Innovation Hackathon 4.0
         </small>
 
     </footer>
 
 
     <!-- JavaScript File -->
+    <script src="i18n.js"></script>
     <script src="script.js"></script>
 
 </body>

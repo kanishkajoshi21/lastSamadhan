@@ -16,8 +16,20 @@ body {
 }
 
 button,
-a {
+a,
+.solution-card,
+.feature-grid div,
+.mini-flow div,
+.complaint-item,
+.image-card,
+.ai-card,
+.smart-tag,
+.logo-box,
+.upload-box {
     font-family: inherit;
+    transition: transform 0.25s ease, box-shadow 0.25s ease,
+        border-color 0.25s ease, background-color 0.25s ease,
+        color 0.25s ease;
 }
 
 a {
@@ -62,6 +74,11 @@ a {
     font-weight: 800;
 }
 
+.logo-box:hover {
+    transform: rotate(-6deg) scale(1.08);
+    box-shadow: 0 8px 18px rgba(11, 92, 255, 0.28);
+}
+
 .logo-area h2 {
     font-size: 20px;
     line-height: 1;
@@ -87,10 +104,30 @@ nav a {
     font-size: 12px;
     font-weight: 600;
     color: #526176;
+    position: relative;
+    padding: 8px 0;
 }
 
 nav a:hover {
     color: #0b5cff;
+}
+
+nav a::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 2px;
+    border-radius: 2px;
+    background: #0b5cff;
+    transform: scaleX(0);
+    transform-origin: center;
+    transition: transform 0.25s ease;
+}
+
+nav a:hover::after {
+    transform: scaleX(1);
 }
 
 .nav-btn {
@@ -101,11 +138,30 @@ nav a:hover {
     border-radius: 7px;
     font-size: 11px;
     font-weight: 700;
+    cursor: pointer;
+}
+
+.nav-btn:hover,
+.primary-btn:hover,
+.cta button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 10px 22px rgba(11, 92, 255, 0.25);
+}
+
+.nav-btn:active,
+.primary-btn:active,
+.secondary-btn:active,
+.cta button:active {
+    transform: translateY(0) scale(0.98);
 }
 
 .menu {
     display: none;
     font-size: 24px;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
 }
 
 
@@ -176,6 +232,7 @@ nav a:hover {
     color: white;
     font-size: 11px;
     font-weight: 700;
+    cursor: pointer;
 }
 
 .secondary-btn {
@@ -185,6 +242,14 @@ nav a:hover {
     background: white;
     font-size: 11px;
     font-weight: 700;
+    cursor: pointer;
+}
+
+.secondary-btn:hover {
+    border-color: #0b5cff;
+    background: #edf4ff;
+    color: #0b5cff;
+    transform: translateY(-2px);
 }
 
 .primary-btn:hover {
@@ -231,11 +296,21 @@ nav a:hover {
     box-shadow: 0 25px 60px rgba(30, 65, 110, 0.15);
 }
 
+.image-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 32px 70px rgba(30, 65, 110, 0.22);
+}
+
 .image-card img {
     width: 100%;
     height: 100%;
     object-fit: cover;
     display: block;
+    transition: transform 0.6s ease;
+}
+
+.image-card:hover img {
+    transform: scale(1.04);
 }
 
 .image-overlay {
@@ -279,6 +354,11 @@ nav a:hover {
     border: 1px solid #e1e7ef;
     border-radius: 14px;
     box-shadow: 0 20px 50px rgba(15, 50, 90, 0.14);
+}
+
+.ai-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 28px 58px rgba(15, 50, 90, 0.2);
 }
 
 .ai-header {
@@ -373,6 +453,11 @@ nav a:hover {
     box-shadow: 0 10px 30px rgba(20, 50, 90, 0.12);
     font-size: 9px;
     font-weight: 700;
+    animation: gentle-float 4s ease-in-out infinite;
+}
+
+.smart-tag:hover {
+    transform: translateY(-4px) scale(1.03);
 }
 
 .smart-tag span {
@@ -435,6 +520,12 @@ nav a:hover {
     text-align: left;
 }
 
+.mini-flow div:hover {
+    transform: translateY(-6px);
+    border-color: #b9d2ff;
+    box-shadow: 0 14px 28px rgba(15, 50, 90, 0.1);
+}
+
 .mini-flow b {
     display: block;
     color: #0b5cff;
@@ -480,6 +571,12 @@ nav a:hover {
     background: white;
     border: 1px solid #e1e8f0;
     border-radius: 12px;
+}
+
+.solution-card:hover {
+    transform: translateY(-8px);
+    border-color: #c5d9ff;
+    box-shadow: 0 18px 35px rgba(15, 50, 90, 0.12);
 }
 
 .solution-card > span {
@@ -530,6 +627,13 @@ nav a:hover {
     color: #40516a;
 }
 
+.feature-grid div:hover {
+    transform: translateY(-4px);
+    border-color: #b9d2ff;
+    color: #0b5cff;
+    box-shadow: 0 12px 24px rgba(15, 50, 90, 0.08);
+}
+
 
 
 /* =========================
@@ -570,6 +674,7 @@ nav a:hover {
     background: #0b5cff;
     color: white;
     font-weight: 700;
+    cursor: pointer;
 }
 
 .complaint-panel {
@@ -593,12 +698,65 @@ nav a:hover {
     border-radius: 16px;
     padding: 25px;
     box-shadow: 0 20px 45px rgba(15, 41, 75, 0.08);
+    transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.complaint-form:focus-within {
+    box-shadow: 0 24px 55px rgba(15, 41, 75, 0.13);
 }
 
 .field-row {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 16px;
+}
+
+.voice-field {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.upload-row {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.upload-box {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 55px;
+    border: 1px dashed #9bb5d6;
+    border-radius: 12px;
+    background: #f4f8ff;
+    color: #214b7b;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.upload-box:hover {
+    border-color: #0b5cff;
+    background: #edf4ff;
+}
+
+.upload-box input {
+    display: none;
+}
+
+.photo-preview {
+    max-width: 240px;
+    max-height: 180px;
+    object-fit: cover;
+    border-radius: 12px;
+    border: 1px solid #dfe7f0;
+    box-shadow: 0 12px 20px rgba(15, 41, 75, 0.08);
+}
+
+.hidden {
+    display: none;
 }
 
 .complaint-form input,
@@ -611,9 +769,43 @@ nav a:hover {
     background: #fff;
 }
 
+.complaint-form input:focus,
+.complaint-form textarea:focus {
+    outline: 3px solid rgba(11, 92, 255, 0.12);
+    border-color: #0b5cff;
+}
+
+.voice-field label,
+.upload-row > label:first-child {
+    color: #30445f;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.field-help {
+    color: #8793a3;
+    font-size: 11px;
+}
+
 .complaint-form textarea {
     resize: vertical;
     min-height: 120px;
+}
+
+.secondary-btn {
+    align-self: flex-start;
+    border: 1px solid #cfe0ff;
+    background: #edf4ff;
+    color: #1648a1;
+    border-radius: 999px;
+    padding: 10px 16px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.secondary-btn:disabled {
+    opacity: 0.7;
+    cursor: progress;
 }
 
 .form-message {
@@ -628,6 +820,15 @@ nav a:hover {
 
 .form-message.error {
     color: #c62828;
+}
+
+.complaint-form button[type="submit"] {
+    cursor: pointer;
+}
+
+.complaint-form button[type="submit"]:disabled {
+    opacity: 0.7;
+    cursor: progress;
 }
 
 .recent-complaints {
@@ -656,6 +857,12 @@ nav a:hover {
     background: #fbfcff;
 }
 
+.complaint-item:hover {
+    transform: translateY(-3px);
+    border-color: #c9dcff;
+    box-shadow: 0 10px 24px rgba(15, 41, 75, 0.08);
+}
+
 .complaint-top {
     display: flex;
     justify-content: space-between;
@@ -669,6 +876,22 @@ nav a:hover {
     font-size: 12px;
     line-height: 1.6;
     margin-bottom: 8px;
+}
+
+.complaint-photo {
+    display: block;
+    width: 100%;
+    max-height: 220px;
+    object-fit: cover;
+    border-radius: 10px;
+    margin-top: 12px;
+    border: 1px solid #e3eaf2;
+    transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+.complaint-photo:hover {
+    transform: scale(1.015);
+    filter: brightness(1.03);
 }
 
 .complaint-item small {
@@ -702,6 +925,26 @@ nav a:hover {
 
 .empty-state {
     color: #64748b;
+}
+
+@keyframes gentle-float {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-6px);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        scroll-behavior: auto !important;
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
 }
 
 
@@ -802,6 +1045,14 @@ footer small {
         font-size: 43px;
     }
 
+    .field-row {
+        grid-template-columns: 1fr;
+    }
+
+    .complaint-form {
+        padding: 18px;
+    }
+
     .buttons {
         flex-direction: column;
     }
@@ -841,5 +1092,138 @@ footer small {
 
     .stats {
         gap: 20px;
+    }
+}
+
+.language-control {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    color: #526176;
+    font-size: 11px;
+    font-weight: 700;
+}
+
+.language-control select {
+    max-width: 120px;
+    border: 1px solid #d8e1eb;
+    border-radius: 8px;
+    padding: 8px 10px;
+    background: #fff;
+    color: #10233f;
+    font: inherit;
+}
+
+.portal-dialog {
+    width: min(680px, calc(100% - 32px));
+    border: 1px solid #e3eaf2;
+    border-radius: 22px;
+    padding: 34px;
+    color: #10233f;
+    box-shadow: 0 30px 90px rgba(5, 25, 55, 0.28);
+}
+
+.portal-dialog::backdrop {
+    background: rgba(5, 19, 38, 0.62);
+    backdrop-filter: blur(5px);
+}
+
+.portal-dialog h2 {
+    margin: 10px 36px 8px 0;
+    font-size: clamp(25px, 4vw, 34px);
+}
+
+.portal-dialog > p {
+    margin: 0;
+    color: #65748a;
+}
+
+.dialog-close {
+    position: absolute;
+    top: 14px;
+    right: 16px;
+    border: 0;
+    background: transparent;
+    color: #526176;
+    font-size: 28px;
+    cursor: pointer;
+}
+
+.portal-options {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+    margin-top: 25px;
+}
+
+.portal-option {
+    display: flex;
+    min-height: 230px;
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 22px;
+    border: 1px solid #e1e8f0;
+    border-radius: 16px;
+    background: #fbfcff;
+}
+
+.portal-option:hover,
+.portal-option:focus-visible {
+    transform: translateY(-4px);
+    border-color: #a9c7ff;
+    box-shadow: 0 18px 32px rgba(15, 50, 90, 0.12);
+}
+
+.portal-icon {
+    display: grid;
+    width: 44px;
+    height: 44px;
+    place-items: center;
+    border-radius: 12px;
+    background: #eaf2ff;
+    color: #0b5cff;
+    font-size: 22px;
+}
+
+.portal-option strong {
+    margin-top: 15px;
+    font-size: 18px;
+}
+
+.portal-option small {
+    margin-top: 8px;
+    color: #65748a;
+    font-size: 12px;
+    line-height: 1.6;
+}
+
+.portal-link {
+    margin-top: auto;
+    padding-top: 16px;
+    color: #0b5cff;
+    font-size: 12px;
+    font-weight: 800;
+}
+
+@media (max-width: 700px) {
+    .language-control {
+        margin-left: auto;
+        margin-right: 14px;
+    }
+
+    .language-control span {
+        display: none;
+    }
+
+    .portal-dialog {
+        padding: 26px 20px;
+    }
+
+    .portal-options {
+        grid-template-columns: 1fr;
+    }
+
+    .portal-option {
+        min-height: 190px;
     }
 }

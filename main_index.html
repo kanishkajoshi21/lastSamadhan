@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>SamadhanAI | Smart Civic Grievance Platform</title>
+
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
+
+    <!-- CSS File -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+
+<body>
+
+    <!-- ================= NAVBAR ================= -->
+
+    <header class="navbar">
+
+        <div class="logo-area">
+
+            <div class="logo-box">S</div>
+
+            <div>
+                <h2>Samadhan<span>AI</span></h2>
+                <p>Smart Civic Grievance Platform</p>
+            </div>
+
+        </div>
+
+
+        <nav id="navMenu">
+
+            <a href="#home">Home</a>
+            <a href="#about">About</a>
+            <a href="#solution">Solution</a>
+            <a href="#features">Features</a>
+
+        </nav>
+
+
+        <button class="nav-btn" onclick="showMessage()">
+            Get Started
+        </button>
+
+
+        <div class="menu" onclick="toggleMenu()">
+            ☰
+        </div>
+
+    </header>
+
+
+
+    <!-- ================= HERO / FRONT PAGE ================= -->
+
+    <main id="home">
+
+        <section class="hero">
+
+            <!-- LEFT CONTENT -->
+
+            <div class="hero-content">
+
+                <div class="badge">
+                    SMART INDIA HACKATHON 2026
+                </div>
+
+
+                <h1>
+
+                    Aapki shikayat,
+
+                    <span>seedha sahi vibhag tak.</span>
+
+                </h1>
+
+
+                <p class="hero-text">
+
+                    SamadhanAI is an AI-powered civic grievance
+                    management platform that understands citizen
+                    complaints and routes them to the right department.
+
+                </p>
+
+
+                <div class="buttons">
+
+                    <button class="primary-btn"
+                            onclick="showMessage()">
+
+                        File a Complaint →
+
+                    </button>
+
+
+                    <a href="#solution"
+                       class="secondary-btn">
+
+                        Explore Solution
+
+                    </a>
+
+                </div>
+
+
+                <!-- Small Stats -->
+
+                <div class="stats">
+
+                    <div>
+                        <strong>AI</strong>
+                        <small>Smart Routing</small>
+                    </div>
+
+                    <div>
+                        <strong>24×7</strong>
+                        <small>Digital Access</small>
+                    </div>
+
+                    <div>
+                        <strong>Live</strong>
+                        <small>Status Tracking</small>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+
+            <!-- RIGHT VISUAL -->
+
+            <div class="visual-area">
+
+
+                <!-- Main Image -->
+
+                <div class="image-card">
+
+                    <img
+                        src="https://images.pexels.com/photos/13465093/pexels-photo-13465093.jpeg?auto=compress&dpr=1&h=750&w=1260"
+                        alt="Citizen using smartphone in city">
+
+                    <div class="image-overlay">
+
+                        <span>CONNECTED CITY</span>
+
+                        <strong>
+                            Citizen → Technology → Department
+                        </strong>
+
+                    </div>
+
+                </div>
+
+
+
+                <!-- Floating AI Card -->
+
+                <div class="ai-card">
+
+                    <div class="ai-header">
+
+                        <div class="ai-icon">
+                            ✦
+                        </div>
+
+                        <div>
+
+                            <small>AI ANALYSIS</small>
+
+                            <strong>Complaint detected</strong>
+
+                        </div>
+
+                        <span class="green-dot"></span>
+
+                    </div>
+
+
+                    <div class="complaint">
+
+                        "Street light has been
+                        broken for 3 days."
+
+                    </div>
+
+
+                    <div class="analysis-grid">
+
+                        <div>
+                            <small>Category</small>
+                            <strong>Street Light</strong>
+                        </div>
+
+                        <div>
+                            <small>Priority</small>
+                            <strong class="medium">Medium</strong>
+                        </div>
+
+                        <div>
+                            <small>Department</small>
+                            <strong>Municipal</strong>
+                        </div>
+
+                        <div>
+                            <small>Status</small>
+                            <strong class="submitted">Submitted</strong>
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- Small Floating Tag -->
+
+                <div class="smart-tag">
+
+                    <span>✓</span>
+
+                    Smart Routing
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ================= SHORT ABOUT ================= -->
+
+        <section class="about" id="about">
+
+            <div class="section-label">
+                WHY SAMADHANAI?
+            </div>
+
+            <h2>
+                From complaint to
+                <span>resolution.</span>
+            </h2>
+
+            <p>
+                A simple digital bridge between citizens
+                and the departments responsible for action.
+            </p>
+
+
+            <div class="mini-flow">
+
+                <div>
+                    <b>01</b>
+                    <strong>Complaint</strong>
+                    <small>Citizen submits issue</small>
+                </div>
+
+                <i>→</i>
+
+                <div>
+                    <b>02</b>
+                    <strong>AI Analysis</strong>
+                    <small>Category & priority</small>
+                </div>
+
+                <i>→</i>
+
+                <div>
+                    <b>03</b>
+                    <strong>Department</strong>
+                    <small>Smart routing</small>
+                </div>
+
+                <i>→</i>
+
+                <div>
+                    <b>04</b>
+                    <strong>Tracking</strong>
+                    <small>Follow progress</small>
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ================= SOLUTION ================= -->
+
+        <section class="solution" id="solution">
+
+            <div>
+
+                <div class="section-label">
+                    OUR SOLUTION
+                </div>
+
+                <h2>
+                    Simple for citizens.
+                    <span>Smart behind the scenes.</span>
+                </h2>
+
+            </div>
+
+
+            <div class="solution-cards">
+
+                <div class="solution-card">
+
+                    <span>✎</span>
+
+                    <h3>Plain Language</h3>
+
+                    <p>
+                        Citizens can describe their issue
+                        naturally.
+                    </p>
+
+                </div>
+
+
+                <div class="solution-card">
+
+                    <span>✦</span>
+
+                    <h3>AI Classification</h3>
+
+                    <p>
+                        AI identifies category, priority
+                        and department.
+                    </p>
+
+                </div>
+
+
+                <div class="solution-card">
+
+                    <span>✓</span>
+
+                    <h3>Live Tracking</h3>
+
+                    <p>
+                        Citizens can track the complaint
+                        until resolution.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ================= FEATURES ================= -->
+
+        <section class="features" id="features">
+
+            <div class="section-label">
+                KEY FEATURES
+            </div>
+
+            <h2>
+                Everything in one
+                <span>grievance journey.</span>
+            </h2>
+
+
+            <div class="feature-grid">
+
+                <div>AI Categorization</div>
+
+                <div>Priority Detection</div>
+
+                <div>Smart Routing</div>
+
+                <div>Department Dashboard</div>
+
+                <div>Live Tracking</div>
+
+                <div>Transparent Updates</div>
+
+            </div>
+
+        </section>
+
+
+
+        <!-- ================= CTA ================= -->
+
+        <section class="cta">
+
+            <div>
+
+                <span>SAMADHANAI</span>
+
+                <h2>
+                    Better complaints.
+                    Better response.
+                </h2>
+
+                <p>
+                    Building a smarter connection between
+                    citizens and civic departments.
+                </p>
+
+                <button onclick="showMessage()">
+                    Start with SamadhanAI →
+                </button>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+
+    <!-- ================= FOOTER ================= -->
+
+    <footer>
+
+        <strong>
+            Samadhan<span>AI</span>
+        </strong>
+
+        <p>
+            AI-Powered Civic Grievance Management
+        </p>
+
+        <small>
+            Smart India Hackathon 2026
+        </small>
+
+    </footer>
+
+
+    <!-- JavaScript File -->
+    <script src="script.js"></script>
+
+</body>
+
+</html>

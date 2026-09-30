@@ -78,6 +78,7 @@
                   <th data-i18n="assignedDepartment">Department</th>
                   <th data-i18n="priority">Priority</th>
                   <th data-i18n="status">Status</th>
+                  <th>Verification</th>
                   <th data-i18n="dateTime">Date/time</th>
                   <th data-i18n="updateStatus">Update status</th>
                   <th data-i18n="viewDetails">Details</th>
@@ -111,11 +112,37 @@
       </dl>
       <p id="detailDescription" class="detail-description"></p>
       <img id="detailPhoto" class="detail-photo hidden" alt="" />
-      <div class="detail-actions">
+      <section id="verificationReview" class="verification-review hidden" aria-labelledby="verificationHeading">
+        <div class="verification-heading">
+          <div><p class="eyebrow">Human review</p><h3 id="verificationHeading">Verification assessment</h3></div>
+          <span id="detailVerificationStatus" class="review-badge">Under Verification</span>
+        </div>
+        <p id="detailVerificationSummary" class="verification-summary"></p>
+        <div id="requestedEvidenceList" class="requested-evidence-list" aria-live="polite"></div>
+        <dl class="verification-facts">
+          <div><dt>AI assessment</dt><dd id="detailAiAssessment">Unclear</dd></div>
+          <div><dt>Photo match</dt><dd id="detailPhotoMatch">Unclear</dd></div>
+          <div><dt>Possible duplicate</dt><dd id="detailDuplicate">Not indicated</dd></div>
+          <div><dt>Nearby reports</dt><dd id="detailNearbyReports">No GPS comparison</dd></div>
+          <div><dt>AI availability</dt><dd id="detailAiAvailability">Unavailable</dd></div>
+        </dl>
+        <label class="verification-reason">
+          <span>Decision reason</span>
+          <textarea id="verificationReason" rows="3" maxlength="1000" placeholder="Record the evidence behind your decision"></textarea>
+        </label>
+        <div class="verification-actions">
+          <button type="button" data-verification-action="approve">Approve and assign</button>
+          <button type="button" data-verification-action="request_more_evidence">Request evidence</button>
+          <button type="button" data-verification-action="mark_suspicious">Mark suspicious</button>
+          <button type="button" data-verification-action="reject">Reject</button>
+          <button type="button" data-verification-action="block_complaint">Block complaint</button>
+        </div>
+        <p id="verificationMessage" class="detail-message" role="status" aria-live="polite"></p>
+      </section>
+      <div id="detailActions" class="detail-actions">
         <label><span data-i18n="updateStatus">Update status</span>
           <select id="detailStatusSelect" class="status-select">
-            <option value="Submitted" data-i18n="submittedStatus">Submitted</option>
-            <option value="Pending" data-i18n="pendingStatus">Pending</option>
+            <option value="Assigned" data-i18n="assignedStatus">Assigned</option>
             <option value="In Progress" data-i18n="inProgressStatus">In Progress</option>
             <option value="Resolved" data-i18n="resolvedStatus">Resolved</option>
           </select>
@@ -123,16 +150,40 @@
         <label><span data-i18n="forwardComplaint">Forward complaint</span>
           <select id="detailDepartmentSelect" class="status-select">
             <option value="Municipal Corporation" data-i18n="municipalDept">Municipal Corporation</option>
+            <option value="Sanitation Department">Sanitation Department</option>
+            <option value="Water Department">Water Department</option>
             <option value="Electricity Department" data-i18n="electricityDept">Electricity Department</option>
-            <option value="Water Supply Department" data-i18n="waterSupplyDept">Water Supply Department</option>
             <option value="Traffic Police" data-i18n="trafficPolice">Traffic Police</option>
             <option value="Health Department" data-i18n="healthDept">Health Department</option>
             <option value="Public Works Department" data-i18n="publicWorks">Public Works Department</option>
           </select>
         </label>
       </div>
+      <label class="remark-field">
+        <span>Department remarks (optional)</span>
+        <textarea id="detailRemarkInput" rows="3" placeholder="Add a brief update for the citizen"></textarea>
+      </label>
       <button id="saveComplaintButton" type="button" class="refresh-btn" data-i18n="saveChanges">Save changes</button>
       <p id="detailMessage" class="detail-message" role="status" aria-live="polite"></p>
+      <section class="account-moderation" aria-labelledby="accountModerationHeading">
+        <h3 id="accountModerationHeading">Citizen account action</h3>
+        <label>
+          <span>Action</span>
+          <select id="accountActionSelect" class="status-select">
+            <option value="warn">Warn</option>
+            <option value="restrict">Restrict submissions</option>
+            <option value="block">Block account</option>
+            <option value="unrestrict">Remove restriction</option>
+            <option value="unblock">Unblock account</option>
+          </select>
+        </label>
+        <label class="verification-reason">
+          <span>Account action reason</span>
+          <textarea id="accountActionReason" rows="2" maxlength="1000" placeholder="Required audit reason"></textarea>
+        </label>
+        <button id="saveAccountActionButton" type="button" class="refresh-btn">Save account action</button>
+        <p id="accountActionMessage" class="detail-message" role="status" aria-live="polite"></p>
+      </section>
     </dialog>
 
     <script src="i18n.js"></script>

@@ -20,6 +20,8 @@ const switchCopy = document.getElementById('switchCopy');
 const authTabs = document.getElementById('authTabs');
 const departmentHelp = document.getElementById('departmentHelp');
 const signOutOtherAccount = document.getElementById('signOutOtherAccount');
+const emailInput = authForm.elements.email;
+const phoneInput = authForm.elements.phone;
 
 let isRegistering = false;
 const getApiBaseUrl = () => {
@@ -34,7 +36,6 @@ const getApiBaseUrl = () => {
     return '';
 };
 const API_BASE_URL = getApiBaseUrl();
-
 async function parseJsonResponse(response) {
     const contentType = response.headers.get('content-type') || '';
     if (!contentType.includes('application/json')) {
@@ -67,6 +68,9 @@ function setMode(registering) {
     phoneField.classList.toggle('hidden', !isRegistering);
     passwordHelp.classList.toggle('hidden', !isRegistering);
     nameField.querySelector('input').required = isRegistering;
+    phoneInput.required = isRegistering;
+    phoneInput.pattern = isRegistering ? '\\+[1-9][0-9]{7,14}' : '';
+    emailInput.pattern = isRegistering ? '[A-Za-z0-9._%+-]+@gmail\\.com' : '';
     authForm.elements.password.autocomplete = isRegistering ? 'new-password' : 'current-password';
     authForm.elements.password.minLength = isRegistering ? 8 : 1;
     authTabs.classList.toggle('hidden', role === 'department');
@@ -74,6 +78,7 @@ function setMode(registering) {
     departmentHelp.classList.toggle('hidden', role !== 'department');
     loginTab.classList.toggle('active', !isRegistering);
     registerTab.classList.toggle('active', isRegistering);
+    submitButton.disabled = false;
 
     if (role === 'citizen') {
         switchCopy.querySelector('span').textContent = translate(isRegistering ? 'alreadyAccount' : 'noAccount');

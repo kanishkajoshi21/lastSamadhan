@@ -57,19 +57,21 @@
           <div class="citizen-main-column">
             <section class="citizen-panel" id="new-complaint">
               <div class="panel-heading">
-                <div><p class="eyebrow" data-i18n="citizenServices">CITIZEN SERVICES</p><h2 data-i18n="newComplaint">Submit a complaint</h2></div>
+                <div><p class="eyebrow" data-i18n="citizenServices">CITIZEN SERVICES</p><h2>Submit a Complaint</h2><p class="panel-intro">Tell us what’s happening and we’ll connect it with the right department.</p></div>
               </div>
               <form id="complaintForm" class="citizen-complaint-form">
                 <input type="hidden" name="name" id="citizenFormName" />
                 <input type="hidden" name="email" id="citizenFormEmail" />
                 <input type="hidden" name="phone" id="citizenFormPhone" />
-                <label>
+                <label class="citizen-form-field">
                   <span data-i18n="complaintTitle">Complaint title</span>
                   <input type="text" name="title" required maxlength="120" data-i18n-placeholder="complaintTitle" />
                 </label>
-                <label>
+                <label class="citizen-form-field">
                   <span data-i18n="location">Location</span>
-                  <input type="text" name="location" data-i18n-placeholder="location" />
+                  <input id="citizenComplaintLocation" type="text" name="location" data-i18n-placeholder="location" />
+                  <button class="location-button" type="button" data-location-target="citizenComplaintLocation">◎ <span>Get My Location</span></button>
+                  <small class="location-status" aria-live="polite"></small>
                 </label>
                 <div class="voice-field">
                   <label for="description" data-i18n="complaintDescription">Describe your complaint</label>
@@ -79,8 +81,9 @@
                 <div class="upload-row">
                   <label for="complaintPhoto" data-i18n="addPhoto">Add a photo (optional)</label>
                   <label class="upload-box" for="complaintPhoto">
-                    <span data-i18n="choosePhoto">📷 Choose a photo</span>
-                    <input id="complaintPhoto" type="file" accept="image/jpeg,image/png,image/webp" />
+                    <span class="upload-icon" aria-hidden="true">↑</span>
+                    <span><strong data-i18n="choosePhoto">Choose a photo</strong><small>Attach an image of the issue</small></span>
+                    <input id="complaintPhoto" type="file" accept="image/jpeg,image/png,image/webp" capture="environment" />
                   </label>
                   <small data-i18n="photoHelp">JPG, PNG or WEBP up to 5 MB.</small>
                   <img id="photoPreview" class="photo-preview hidden" alt="Selected complaint photo preview" data-i18n-alt="photoPreviewAlt" />
@@ -108,7 +111,7 @@
               <dl>
                 <div><dt data-i18n="fullName">Full name</dt><dd id="profileName">—</dd></div>
                 <div><dt data-i18n="email">Email address</dt><dd id="profileEmail">—</dd></div>
-                <div><dt data-i18n="phone">Phone number (optional)</dt><dd id="profilePhone">—</dd></div>
+                <div><dt data-i18n="phone">Phone number</dt><dd id="profilePhone">—</dd></div>
               </dl>
             </section>
           </aside>

@@ -357,3 +357,106 @@ select {
     transition-duration: 0.01ms !important;
   }
 }
+
+:root {
+  color: #15243b;
+  background: #f5f7fa;
+}
+
+body {
+  color: #15243b;
+  background: #f5f7fa;
+}
+
+.auth-layout {
+  grid-template-columns: minmax(300px, 0.88fr) minmax(430px, 1.12fr);
+}
+
+.auth-aside {
+  padding: clamp(34px, 6vw, 84px);
+  background: #123b70;
+}
+
+.brand-mark {
+  border-radius: 11px;
+}
+
+.aside-kicker {
+  margin-top: 64px;
+}
+
+.auth-main {
+  background: #f5f7fa;
+}
+
+.auth-card {
+  border-color: #e0e7f0;
+  border-radius: 14px;
+  box-shadow: 0 14px 36px rgba(21, 39, 65, 0.07);
+}
+
+.role-badge {
+  border-radius: 7px;
+  color: #124fc7;
+  background: #edf4ff;
+}
+
+.auth-card h2 {
+  color: #15243b;
+  letter-spacing: 0;
+}
+
+.auth-tabs {
+  border-radius: 9px;
+}
+
+.auth-tab {
+  min-height: 40px;
+  border-radius: 7px;
+}
+
+.auth-form input {
+  min-height: 46px;
+  border-color: #d7e0eb;
+  border-radius: 8px;
+  transition: border-color 150ms ease, box-shadow 150ms ease;
+}
+
+.auth-form input:focus {
+  border-color: #155eef;
+  box-shadow: 0 0 0 3px rgba(21, 94, 239, 0.12);
+}
+
+.submit-btn {
+  min-height: 46px;
+  border: 1px solid #155eef;
+  border-radius: 8px;
+  background: #155eef;
+  transition: background-color 150ms ease, box-shadow 150ms ease;
+}
+
+.submit-btn:hover {
+  transform: none;
+  background: #124fc7;
+  box-shadow: 0 7px 16px rgba(21, 94, 239, 0.18);
+}
+
+.submit-btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.58;
+  transform: none;
+}
+
+@media (max-width: 760px) {
+  .auth-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .auth-aside {
+    min-height: 230px;
+  }
+
+  .aside-kicker {
+    margin-top: 30px;
+  }
+}

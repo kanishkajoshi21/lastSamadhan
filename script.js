@@ -178,6 +178,50 @@ function bindPhotoUpload() {
     });
 }
 
+function bindLocationButtons() {
+    document.querySelectorAll('[data-location-target]').forEach((button) => {
+        const locationInput = document.getElementById(button.dataset.locationTarget);
+        if (locationInput && !locationInput.dataset.locationListenerBound) {
+            locationInput.addEventListener('input', () => {
+                delete locationInput.dataset.latitude;
+                delete locationInput.dataset.longitude;
+            });
+            locationInput.dataset.locationListenerBound = 'true';
+        }
+    });
+
+    document.querySelectorAll('[data-location-target]').forEach((button) => {
+        button.addEventListener('click', () => {
+            const input = document.getElementById(button.dataset.locationTarget);
+            const status = button.parentElement.querySelector('.location-status');
+            if (!input || !status) return;
+            if (!navigator.geolocation) {
+                status.textContent = 'Location is not available in this browser.';
+                status.classList.add('error');
+                return;
+            }
+
+            button.disabled = true;
+            status.textContent = 'Finding your location…';
+            status.classList.remove('error', 'success');
+            navigator.geolocation.getCurrentPosition((position) => {
+                const latitude = position.coords.latitude;
+                const longitude = position.coords.longitude;
+                input.dataset.latitude = String(latitude);
+                input.dataset.longitude = String(longitude);
+                input.value = `${latitude.toFixed(5)}, ${longitude.toFixed(5)}`;
+                status.textContent = 'Location added. You can edit it before submitting.';
+                status.classList.add('success');
+                button.disabled = false;
+            }, () => {
+                status.textContent = 'Location unavailable. Enter it manually instead.';
+                status.classList.add('error');
+                button.disabled = false;
+            }, { enableHighAccuracy: false, timeout: 10000, maximumAge: 60000 });
+        });
+    });
+}
+
 async function submitComplaint(event) {
     event.preventDefault();
 
@@ -186,6 +230,7 @@ async function submitComplaint(event) {
     const submitButton = form.querySelector("button[type='submit']");
     const photoInput = document.getElementById("complaintPhoto");
     const photoPreview = document.getElementById("photoPreview");
+    const locationInput = form.elements.namedItem("location");
 
     const payload = {
         name: readFormValue(form, "name"),
@@ -195,6 +240,8 @@ async function submitComplaint(event) {
         title: readFormValue(form, "title"),
         description: readFormValue(form, "description"),
         photo: photoInput && photoInput.dataset.preview ? photoInput.dataset.preview : "",
+        latitude: locationInput?.dataset.latitude || null,
+        longitude: locationInput?.dataset.longitude || null,
     };
 
     submitButton.disabled = true;
@@ -273,6 +320,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     bindVoiceInput();
     bindPhotoUpload();
+    bindLocationButtons();
     if (!document.getElementById("citizenName")) {
         loadComplaintList();
     }

@@ -169,86 +169,8 @@ Sistec innovation
 
                 <div class="image-card">
 
-                    <img src="https://images.pexels.com/photos/13465093/pexels-photo-13465093.jpeg?auto=compress&dpr=1&h=750&w=1260"
+                    <img src="hero_image1.jpeg"
                         alt="Citizen using smartphone in city" data-i18n-alt="citizenUsingPhone">
-
-                    <div class="image-overlay">
-
-                        <span data-i18n="connectedCity">CONNECTED CITY</span>
-
-                        <strong>
-                            <span data-i18n="citizenTechnologyDepartment">Citizen → Technology → Department</span>
-                        </strong>
-
-                    </div>
-
-                </div>
-
-
-
-                <!-- Floating AI Card -->
-
-                <div class="ai-card">
-
-                    <div class="ai-header">
-
-                        <div class="ai-icon">
-                            ✦
-                        </div>
-
-                        <div>
-
-                            <small data-i18n="aiAnalysis">AI ANALYSIS</small>
-
-                            <strong data-i18n="complaintDetected">Complaint detected</strong>
-
-                        </div>
-
-                        <span class="green-dot"></span>
-
-                    </div>
-
-
-                    <div class="complaint" data-i18n="demoComplaint">
-
-                        "Street light has been broken for 3 days."
-
-                    </div>
-
-
-                    <div class="analysis-grid">
-
-                        <div>
-                            <small data-i18n="category">Category</small>
-                            <strong data-i18n="streetLight">Street Light</strong>
-                        </div>
-
-                        <div>
-                            <small data-i18n="priority">Priority</small>
-                            <strong class="medium" data-i18n="mediumPriority">Medium</strong>
-                        </div>
-
-                        <div>
-                            <small data-i18n="assignedDepartment">Department</small>
-                            <strong data-i18n="municipalCorporation">Municipal</strong>
-                        </div>
-
-                        <div>
-                            <small data-i18n="status">Status</small>
-                            <strong class="submitted" data-i18n="submittedStatus">Submitted</strong>
-                        </div>
-
-                    </div>
-
-                </div>
-
-
-                <!-- Small Floating Tag -->
-
-                <div class="smart-tag">
-
-                    <span>✓</span>
-                    <span data-i18n="smartRouting">Smart Routing</span>
 
                 </div>
 
@@ -431,18 +353,35 @@ Sistec innovation
         </section>
 
         <section class="complaint-panel" id="complaint-form">
-            <div class="section-label" data-i18n="fileComplaintLabel">FILE A COMPLAINT</div>
-            <h2 data-i18n="complaintFormTitle">Tell us what’s happening in your area</h2>
-
             <form id="complaintForm" class="complaint-form">
-                <div class="field-row">
-                    <input type="text" name="name" placeholder="Full Name" data-i18n-placeholder="fullName" required>
-                    <input type="email" name="email" placeholder="Email Address" data-i18n-placeholder="emailAddress">
+                <div class="complaint-form-heading">
+                    <div class="section-label" data-i18n="fileComplaintLabel">FILE A COMPLAINT</div>
+                    <h2 data-i18n="complaintFormTitle">Tell us what’s happening in your area</h2>
+                    <p>Share a few details and we’ll route your concern to the right civic department.</p>
                 </div>
 
                 <div class="field-row">
-                    <input type="tel" name="phone" placeholder="Phone Number" data-i18n-placeholder="phoneNumber">
-                    <input type="text" name="location" placeholder="Location" data-i18n-placeholder="location">
+                    <label class="form-field">
+                        <span data-i18n="fullName">Full name</span>
+                        <input type="text" name="name" autocomplete="name" placeholder="Full Name" data-i18n-placeholder="fullName" required>
+                    </label>
+                    <label class="form-field">
+                        <span data-i18n="emailAddress">Email Address</span>
+                        <input type="email" name="email" autocomplete="email" placeholder="Email Address" data-i18n-placeholder="emailAddress">
+                    </label>
+                </div>
+
+                <div class="field-row">
+                    <label class="form-field">
+                        <span data-i18n="phoneNumber">Phone Number</span>
+                        <input type="tel" name="phone" autocomplete="tel" placeholder="Phone Number" data-i18n-placeholder="phoneNumber">
+                    </label>
+                    <label class="form-field">
+                        <span data-i18n="location">Location</span>
+                        <input id="complaintLocation" type="text" name="location" autocomplete="street-address" placeholder="Location" data-i18n-placeholder="location">
+                        <button class="location-button" type="button" data-location-target="complaintLocation">◎ <span>Get My Location</span></button>
+                        <small class="location-status" aria-live="polite"></small>
+                    </label>
                 </div>
                 
 
@@ -460,15 +399,19 @@ Sistec innovation
                 <div class="upload-row">
                     <label for="complaintPhoto" data-i18n="addPhoto">Add a photo (optional)</label>
                     <label class="upload-box" for="complaintPhoto">
-                        <span data-i18n="choosePhoto">📷 Choose a photo</span>
-                        <input id="complaintPhoto" type="file" accept="image/*">
+                        <span class="upload-icon" aria-hidden="true">↑</span>
+                        <span><strong data-i18n="choosePhoto">Choose a photo</strong><small>Attach an image of the issue</small></span>
+                        <input id="complaintPhoto" type="file" accept="image/jpeg,image/png,image/webp" capture="environment">
                     </label>
                     <small class="field-help" data-i18n="photoHelp">JPG, PNG or WEBP up to 5 MB.</small>
                     <img id="photoPreview" class="photo-preview hidden" alt="Selected complaint photo preview">
                 </div>
 
-                <button type="submit" class="primary-btn" data-i18n="submitComplaint">Submit Complaint</button>
-                <p id="formMessage" class="form-message"></p>
+                <div class="form-submit-row">
+                    <p class="form-assurance">Please avoid sharing sensitive personal information in your description.</p>
+                    <button type="submit" class="primary-btn" data-i18n="submitComplaint">Submit Complaint</button>
+                </div>
+                <p id="formMessage" class="form-message" role="status" aria-live="polite"></p>
             </form>
 
             <div class="recent-complaints">

@@ -44,12 +44,21 @@ function formatDateTime(value) {
   }).format(date);
 }
 
+function normalizeStatus(value) {
+  if (value === 'Pending' || value === 'Under Review') return 'Under Verification';
+  return value || 'Submitted';
+}
+
+function formatVerificationLabel(value = '') {
+  return String(value || 'under_verification').replaceAll('_', ' ').replace(/\b\w/g, (letter) => letter.toUpperCase());
+}
+
 function renderStats(complaints) {
   totalComplaints.textContent = complaints.length;
-  pendingCount.textContent = complaints.filter((item) => item.status === 'Pending' || item.status === 'Submitted').length;
+  pendingCount.textContent = complaints.filter((item) => ['Submitted', 'Under Verification', 'More Evidence Required', 'Verified', 'Assigned', 'Under Review', 'Pending'].includes(normalizeStatus(item.status))).length;
   highPriorityCount.textContent = complaints.filter((item) => item.priority === 'High').length;
-  inProgressCount.textContent = complaints.filter((item) => item.status === 'In Progress').length;
-  resolvedCount.textContent = complaints.filter((item) => item.status === 'Resolved').length;
+  inProgressCount.textContent = complaints.filter((item) => normalizeStatus(item.status) === 'In Progress').length;
+  resolvedCount.textContent = complaints.filter((item) => ['Resolved', 'Closed'].includes(normalizeStatus(item.status))).length;
 }
 
 function renderNotifications(complaints) {
@@ -76,7 +85,7 @@ function renderNotifications(complaints) {
 
 function renderTable(complaints) {
   if (!complaints.length) {
-    complaintTableBody.innerHTML = `<tr><td colspan="9" class="empty-state">${escapeHtml(translate('noDepartmentComplaints'))}</td></tr>`;
+    complaintTableBody.innerHTML = `<tr><td colspan="10" class="empty-state">${escapeHtml(translate('noDepartmentComplaints'))}</td></tr>`;
     renderNotifications(complaints);
     return;
   }
@@ -86,8 +95,15 @@ function renderTable(complaints) {
     .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
     .map((item) => {
       const priorityClass = ['High', 'Medium', 'Low'].includes(item.priority) ? item.priority.toLowerCase() : 'medium';
-      const statusClass = formatStatus(item.status);
-      const safeStatus = ['Submitted', 'Pending', 'In Progress', 'Resolved'].includes(item.status) ? item.status : 'Submitted';
+      const safeStatus = normalizeStatus(item.status);
+      const statusClass = formatStatus(safeStatus);
+      const routineStatuses = safeStatus === 'Assigned'
+        ? ['Assigned', 'In Progress']
+        : safeStatus === 'In Progress'
+          ? ['In Progress', 'Resolved']
+          : safeStatus === 'Resolved'
+            ? ['Resolved']
+            : [];
 
       return `
         <tr>
@@ -100,10 +116,11 @@ function renderTable(complaints) {
           <td>${escapeHtml(translateDepartment(item.department || 'General'))}</td>
           <td><span class="priority ${priorityClass}">${escapeHtml(translatePriority(item.priority || 'Medium'))}</span></td>
           <td><span class="badge ${statusClass}">${escapeHtml(translateStatus(safeStatus))}</span></td>
+          <td><span class="review-badge ${escapeHtml(formatStatus(item.verificationStatus || 'under_verification'))}">${escapeHtml(formatVerificationLabel(item.verificationStatus))}</span></td>
           <td><time datetime="${escapeHtml(item.createdAt || '')}">${escapeHtml(formatDateTime(item.createdAt))}</time></td>
           <td>
-            <select class="status-select" data-id="${escapeHtml(item.id)}" aria-label="${escapeHtml(translate('updateStatus'))}">
-              ${['Submitted', 'Pending', 'In Progress', 'Resolved'].map((status) => `
+            <select class="status-select" data-id="${escapeHtml(item.id)}" aria-label="${escapeHtml(translate('updateStatus'))}" ${routineStatuses.length ? '' : 'disabled'}>
+              ${routineStatuses.map((status) => `
                 <option value="${status}" ${safeStatus === status ? 'selected' : ''}>${escapeHtml(translateStatus(status))}</option>
               `).join('')}
             </select>
@@ -119,7 +136,7 @@ function renderTable(complaints) {
           method: 'PUT',
           credentials: 'include',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ status: select.value }),
+          body: JSON.stringify({ status: select.value, remarks: 'Department status update.' }),
         });
         if (response.status === 401) {
           window.location.replace(`${API_BASE_URL}/login.html?role=department`);
@@ -146,35 +163,98 @@ function renderTable(complaints) {
   renderNotifications(complaints);
 }
 
-function showComplaintDetails(complaint) {
+async function showComplaintDetails(complaint) {
+  const normalizedStatus = normalizeStatus(complaint.status);
   document.getElementById('detailTitle').textContent = complaint.title;
   document.getElementById('detailCitizen').textContent = complaint.name || complaint.email || '—';
   document.getElementById('detailLocation').textContent = complaint.location || '—';
   document.getElementById('detailPriority').textContent = translatePriority(complaint.priority || '—');
-  document.getElementById('detailStatus').textContent = translateStatus(complaint.status);
+  document.getElementById('detailStatus').textContent = translateStatus(normalizedStatus);
   document.getElementById('detailDescription').textContent = complaint.description;
-  document.getElementById('detailStatusSelect').value = complaint.status;
+  const routineStatus = ['Assigned', 'In Progress', 'Resolved'].includes(normalizedStatus);
+  const detailActions = document.getElementById('detailActions');
+  detailActions.classList.toggle('hidden', !routineStatus);
+  document.getElementById('detailStatusSelect').value = routineStatus ? normalizedStatus : 'Assigned';
   document.getElementById('detailDepartmentSelect').value = complaint.department;
+  document.getElementById('detailRemarkInput').value = '';
+  document.getElementById('verificationReview').classList.toggle('hidden', !['Under Verification', 'More Evidence Required'].includes(normalizedStatus));
+  const analysis = complaint.verification || {};
+  document.getElementById('detailVerificationStatus').textContent = formatVerificationLabel(complaint.verificationStatus);
+  document.getElementById('detailVerificationSummary').textContent = complaint.verificationSummary || 'Awaiting human review.';
+  document.getElementById('detailAiAssessment').textContent = analysis.assessment || 'unclear';
+  document.getElementById('detailPhotoMatch').textContent = analysis.photoMatch || (complaint.photo ? 'unclear' : 'no photo attached');
+  document.getElementById('detailDuplicate').textContent = analysis.possibleDuplicate ? 'Possible duplicate' : 'No duplicate indicated';
+  document.getElementById('detailNearbyReports').textContent = Array.isArray(analysis.nearbyReports) && analysis.nearbyReports.length
+    ? `${analysis.nearbyReports.length} within 250 m (supporting evidence)`
+    : (complaint.latitude != null && complaint.longitude != null ? 'No nearby reports found' : 'No GPS comparison');
+  document.getElementById('detailAiAvailability').textContent = analysis.analysisStatus === 'complete' ? 'Gemini response available' : 'AI unavailable; human review required';
+  document.getElementById('verificationReason').value = '';
+  document.getElementById('verificationMessage').textContent = '';
+  document.getElementById('accountActionReason').value = '';
+  document.getElementById('accountActionMessage').textContent = '';
   const photo = document.getElementById('detailPhoto');
   photo.classList.toggle('hidden', !complaint.photo);
   photo.src = complaint.photo || '';
   photo.alt = complaint.title;
   detailMessage.textContent = '';
+  const evidenceList = document.getElementById('requestedEvidenceList');
+  evidenceList.replaceChildren();
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/complaints/${encodeURIComponent(complaint.id)}/evidence`, { credentials: 'include' });
+    if (response.ok) {
+      const { evidence = [] } = await response.json();
+      for (const item of evidence) {
+        const entry = document.createElement('article');
+        entry.className = 'requested-evidence-item';
+        const note = document.createElement('p');
+        note.textContent = item.evidence_text || 'Photo evidence submitted.';
+        entry.append(note);
+        if (item.photo) {
+          const image = document.createElement('img');
+          image.src = item.photo;
+          image.alt = 'Citizen submitted supporting evidence';
+          image.className = 'detail-photo';
+          entry.append(image);
+        }
+        const date = document.createElement('small');
+        date.textContent = new Date(item.timestamp).toLocaleString();
+        entry.append(date);
+        evidenceList.append(entry);
+      }
+    }
+  } catch {
+    const unavailable = document.createElement('p');
+    unavailable.textContent = 'Additional evidence could not be loaded.';
+    evidenceList.append(unavailable);
+  }
   complaintDialog.showModal();
 }
 
 async function saveComplaintChanges() {
   if (!selectedComplaint) return;
-  const changes = [
-    {
+  const changes = [];
+  const selectedStatus = document.getElementById('detailStatusSelect').value;
+  const selectedDepartment = document.getElementById('detailDepartmentSelect').value;
+  if (!document.getElementById('detailActions').classList.contains('hidden')
+    && selectedStatus !== normalizeStatus(selectedComplaint.status)) {
+    changes.push({
       endpoint: `${API_BASE_URL}/api/complaints/${encodeURIComponent(selectedComplaint.id)}/status`,
-      body: { status: document.getElementById('detailStatusSelect').value },
-    },
-    {
+      body: {
+        status: selectedStatus,
+        remarks: document.getElementById('detailRemarkInput').value.trim(),
+      },
+    });
+  }
+  if (selectedDepartment !== selectedComplaint.department) {
+    changes.push({
       endpoint: `${API_BASE_URL}/api/complaints/${encodeURIComponent(selectedComplaint.id)}/department`,
-      body: { department: document.getElementById('detailDepartmentSelect').value },
-    },
-  ];
+      body: { department: selectedDepartment },
+    });
+  }
+  if (!changes.length) {
+    complaintDialog.close();
+    return;
+  }
 
   detailMessage.textContent = '';
   const saveButton = document.getElementById('saveComplaintButton');
@@ -203,6 +283,63 @@ async function saveComplaintChanges() {
   }
 }
 
+async function saveVerificationDecision(button) {
+  if (!selectedComplaint) return;
+  const reason = document.getElementById('verificationReason').value.trim();
+  const message = document.getElementById('verificationMessage');
+  if (!reason) {
+    message.textContent = 'Add a reason for this verification decision.';
+    return;
+  }
+  const buttons = Array.from(document.querySelectorAll('[data-verification-action]'));
+  buttons.forEach((item) => { item.disabled = true; });
+  try {
+    const response = await fetch(`${API_BASE_URL}/api/complaints/${encodeURIComponent(selectedComplaint.id)}/verification`, {
+      method: 'POST',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: button.dataset.verificationAction, reason }),
+    });
+    const result = await response.json();
+    if (!response.ok) throw new Error(result.message || 'Unable to save verification decision.');
+    complaintDialog.close();
+    await loadComplaints();
+  } catch (error) {
+    message.textContent = error.message;
+  } finally {
+    buttons.forEach((item) => { item.disabled = false; });
+  }
+}
+
+async function saveAccountAction() {
+  if (!selectedComplaint) return;
+  const reason = document.getElementById('accountActionReason').value.trim();
+  const message = document.getElementById('accountActionMessage');
+  if (!reason) {
+    message.textContent = 'Add a reason for this account action.';
+    return;
+  }
+  const button = document.getElementById('saveAccountActionButton');
+  button.disabled = true;
+  try {
+    const email = selectedComplaint.ownerEmail || selectedComplaint.email;
+    const response = await fetch(`${API_BASE_URL}/api/users/${encodeURIComponent(email)}/restriction`, {
+      method: 'POST',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ action: document.getElementById('accountActionSelect').value, reason }),
+    });
+    const result = await response.json();
+    if (!response.ok) throw new Error(result.message || 'Unable to save account action.');
+    message.textContent = result.message;
+    document.getElementById('accountActionReason').value = '';
+  } catch (error) {
+    message.textContent = error.message;
+  } finally {
+    button.disabled = false;
+  }
+}
+
 async function loadComplaints() {
   try {
     const [profileResponse, complaintResponse] = await Promise.all([
@@ -226,7 +363,7 @@ async function loadComplaints() {
     renderStats(currentComplaints);
     renderTable(currentComplaints);
   } catch (error) {
-    complaintTableBody.innerHTML = `<tr><td colspan="9" class="empty-state">${escapeHtml(translate('loadError'))}</td></tr>`;
+    complaintTableBody.innerHTML = `<tr><td colspan="10" class="empty-state">${escapeHtml(translate('loadError'))}</td></tr>`;
   }
 }
 
@@ -240,6 +377,10 @@ document.getElementById('logoutButton').addEventListener('click', async () => {
   }
 });
 document.getElementById('saveComplaintButton').addEventListener('click', saveComplaintChanges);
+document.getElementById('saveAccountActionButton').addEventListener('click', saveAccountAction);
+document.querySelectorAll('[data-verification-action]').forEach((button) => {
+  button.addEventListener('click', () => saveVerificationDecision(button));
+});
 refreshBtn.addEventListener('click', loadComplaints);
 document.addEventListener('samadhan:language-change', loadComplaints);
 loadComplaints();
